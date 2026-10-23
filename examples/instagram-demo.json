@@ -1,0 +1,39 @@
+{
+  "saved_saved_media": [
+    {
+      "title": "[Exemple fictif] Une inspiration cuisine",
+      "author": "exemple.cuisine",
+      "string_map_data": {
+        "Saved on": {
+          "href": "https://www.instagram.com/reel/DEMO_cuisine/",
+          "timestamp": 1780000000
+        }
+      },
+      "caption": "Texte fictif de démonstration : une idée de cuisine, sans quantités ni temps de cuisson. Ces informations restent à compléter.",
+      "collections": ["Exemples fictifs"]
+    },
+    {
+      "title": "[Exemple fictif] Un concept de robotique",
+      "url": "https://www.instagram.com/reel/DEMO_robotique/",
+      "collections": ["Exemples fictifs"]
+    },
+    {
+      "title": "[Exemple fictif] Une idée à fabriquer",
+      "url": "https://www.instagram.com/reel/DEMO_diy/",
+      "collections": ["Exemples fictifs"]
+    },
+    {
+      "title": "[Exemple fictif] Doublon avec un lien différent",
+      "url": "https://m.instagram.com/reels/DEMO_diy/?igsh=exemple"
+    },
+    {
+      "title": "[Exemple fictif] Lien ignoré : profil",
+      "url": "https://www.instagram.com/exemple/"
+    },
+    {
+      "title": "[Exemple fictif] Erreur : date invalide",
+      "url": "https://www.instagram.com/reel/DEMO_date/",
+      "saved_at": "date-invalide"
+    }
+  ]
+}

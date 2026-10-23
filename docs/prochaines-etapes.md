@@ -1,39 +1,27 @@
 # Prochaines étapes
 
-## 1. Préciser le scénario prioritaire
+## Réalisé dans la première base
 
-Choisir le premier résultat utile, préciser les appareils utilisés, le volume de sauvegardes et le niveau d'automatisation indispensable.
+Bibliothèque, ajout par lien, imports avec bilan, recherche et filtres, thèmes, collections, notes, suivi, export et suppression. Connecteur de synchronisation en arrière-plan, stockage de session côté serveur, conteneur Docker et accès distant privé préparés.
 
-Livrable : scénario d'usage et contraintes de départ.
+## 1. Valider l'accès depuis le VPS
 
-## 2. Tester l'accès aux données
+Déployer la base, établir une session Instagram et tester 30 à 50 sauvegardes. Mesurer les références accessibles, légendes, dates effectivement disponibles, erreurs, contenus privés ou supprimés et temps de traitement. Confirmer que l'accès continue lorsque l'ordinateur personnel est éteint.
 
-Sur 30 à 50 sauvegardes représentatives, examiner les informations disponibles dans un export et évaluer une méthode d'acquisition, en s'appuyant si utile sur reels-vault.
+Cette étape est bloquante pour valider la synchronisation réelle, mais pas pour utiliser et tester la bibliothèque avec des liens ou fichiers.
 
-Inclure des recettes, tutoriels et contenus informatiques, ainsi que des vidéos sans parole et des références devenues inaccessibles.
+## 2. Fiabiliser la synchronisation
 
-Livrable : tableau de couverture, erreurs, temps et coût. Distinguer import d'une référence, accès au contenu et analyse exploitable.
+Tester expiration de session, interruptions et limitations côté Instagram. Ajouter pagination et point de reprise persistants pour l'historique complet. La version actuelle relit une fenêtre de 50, 200, 1 000 ou 5 000 publications, signale la limite et déduplique les résultats. Elle ne supprime pas une référence retirée des sauvegardes Instagram.
 
-## 3. Définir les fiches et le classement
+## 3. Essayer les parcours sur ordinateur et téléphone
 
-Décrire des exemples attendus de recettes, fiches de veille et projets. Valider les informations indispensables, les champs manquants et les corrections personnelles.
+Vérifier visuellement recherche, import, modification et synchronisation sur les appareils réels. Aucun navigateur pilotable n'était disponible pour la vérification visuelle pendant ce développement.
 
-Livrable : formats métier et règles de catégorisation.
+## 4. Ajouter l'analyse lorsque les sources sont accessibles
 
-## 4. Délimiter le MVP
+Conserver légendes, transcriptions et éventuelles images avec leur provenance. Mesurer qualité et coût avant activation de traitements massifs. Ne pas déduire de contenu à partir d'un lien seul.
 
-Décrire les parcours et écrans essentiels, sélectionner le premier module et définir les critères d'acceptation.
+## 5. Choisir le premier module spécialisé
 
-Livrable : périmètre de la première version utile.
-
-## 5. Choisir et mettre en place la solution technique
-
-Choisir les composants d'interface, de stockage et de traitement à partir des résultats précédents.
-
-Livrable : architecture concrète, environnement de développement et premier parcours fonctionnel.
-
-## 6. Valider en usage personnel
-
-Essayer le parcours complet et observer les ressources retrouvées et utilisées, la qualité des fiches, les corrections nécessaires et le coût.
-
-Livrable : retours d'usage et priorités de la version suivante.
+Recettes, veille ou projets DIY, selon les retours sur la bibliothèque. Définir les informations indispensables et les champs qui doivent rester inconnus quand la source est incomplète.

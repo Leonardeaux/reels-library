@@ -1,38 +1,42 @@
 # Décisions et questions ouvertes
 
-Dernière mise à jour : 23 octobre 2026.
+Mise à jour : 23 octobre 2026.
 
-## Éléments confirmés
+## Confirmé par l'utilisateur
 
-| Sujet | Décision ou préférence |
+| Sujet | Décision |
 | --- | --- |
-| Public initial | Usage personnel, ouverture possible ensuite |
-| Source initiale | Reels Instagram sauvegardés |
-| Organisation | Catégories évolutives |
-| Domaines envisagés | Cuisine, informatique/IA/data/robotique, making/DIY/impression 3D |
-| Parcours | Préférence pour une solution sans Hermes ni iMessage |
-| Démarrage | Création d'un dossier et initialisation d'un dépôt Git local |
+| Public initial | Usage personnel ; ouverture possible ensuite |
+| Premier usage | Bibliothèque : importer, classer et retrouver |
+| Appareils | Ordinateur et téléphone |
+| Synchronisation | Automatique, indispensable au produit |
+| Hébergement | VPS ou conteneur ; l'ordinateur personnel ne doit pas être nécessaire au fonctionnement |
+| Source | Reels Instagram sauvegardés |
+| Organisation | Catégories évolutives, domaines ouverts |
+| Parcours | Sans Hermes ni iMessage |
+| Compte Instagram | Aucune connexion dans un navigateur au moment des échanges |
 
-## Propositions à valider
+## Choix de ce premier incrément
 
-- Bibliothèque commune et modules spécialisés.
-- Plusieurs catégories par Reel ; séparation entre sujet, nature du contenu et intention personnelle.
-- Moteur d'acquisition indépendant de l'interface et du service d'analyse.
-- Conservation des sources brutes et résultats structurés séparés.
-- Essai d'acquisition avant choix définitif des technologies.
-- Nom de travail : Reels Library.
+- Application web responsive, serveur Python WSGI/Waitress, base SQLite relationnelle.
+- Déploiement Docker Compose, un seul processus applicatif et un planificateur interne.
+- Volumes séparés pour bibliothèque et session Instagram ; clé d'accès injectée par secret Compose.
+- Accès distant personnel par authentification HTTP Basic (`admin` et clé longue) derrière HTTPS.
+- Synchronisation expérimentale via `gallery-dl`, à partir d'un fichier de session conservé côté serveur. Le service ne lit pas le navigateur du poste personnel pendant ses passages.
+- Connexion initiale et renouvellement de session manuels. L'outil d'export de navigateur est facultatif et sert uniquement à préparer la connexion.
+- Bibliothèque commune et classement manuel avant les modules spécialisés et l'analyse IA.
+- Réimport sans écrasement des corrections personnelles ; nouvelles sources conservées séparément.
 
-## Questions ouvertes
+Ces choix constituent une base de prototype. La validation de l'accès à Instagram depuis le VPS précède la promesse d'une synchronisation fiable.
 
-- Quel usage valider en premier : bibliothèque, recettes, veille ou projets DIY ?
-- Quel est le volume historique et le rythme des nouvelles sauvegardes ?
-- Quels sont les appareils principaux : Android, iPhone, ordinateur ?
-- Un export initial et des ajouts par lien sont-ils acceptables, ou la synchronisation est-elle indispensable ?
-- Quel budget et quelles préférences entre traitement local et services en ligne ?
-- Quels outils existants faut-il intégrer ?
+## Questions encore ouvertes
 
-## Limites connues du cadrage
+- Volume historique et nombre de nouvelles sauvegardes par semaine.
+- VPS, domaine et reverse proxy déjà disponibles ou à choisir.
+- Acceptabilité du renouvellement manuel d'une session expirée.
+- Budget et mode de traitement pour la future analyse.
+- Premier module spécialisé et outils existants à intégrer.
 
-La récupération effective des contenus et la synchronisation des sauvegardes n'ont pas été validées. L'étude de reels-vault repose sur une lecture du code, sans exécution ni accès à un compte Instagram.
+## Validation restante
 
-Aucune stack applicative, application de recettes ou méthode d'hébergement n'est encore choisie.
+L'extracteur est installé, les contrats de données et la gestion des erreurs sont testés avec des réponses simulées. Aucun compte réel n'a été utilisé. La connexion initiale, les challenges éventuels, la stabilité de l'accès depuis un VPS et la couverture des contenus privés/supprimés restent à mesurer.

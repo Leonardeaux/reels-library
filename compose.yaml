@@ -1,0 +1,50 @@
+services:
+  app:
+    build: .
+    init: true
+    restart: unless-stopped
+    environment:
+      REELS_PUBLIC_URL: ${REELS_PUBLIC_URL:-http://localhost:8765}
+      REELS_ACCESS_TOKEN_FILE: /run/secrets/app_token
+    secrets:
+      - app_token
+    volumes:
+      - library_data:/app/data
+      - instagram_session:/app/sessions
+    ports:
+      - "127.0.0.1:8765:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:size=64m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    stop_grace_period: 20s
+
+  proxy:
+    image: caddy:2-alpine
+    profiles: [public]
+    restart: unless-stopped
+    environment:
+      REELS_DOMAIN: ${REELS_DOMAIN:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      app:
+        condition: service_healthy
+
+secrets:
+  app_token:
+    file: ./secrets/app_token
+
+volumes:
+  library_data:
+  instagram_session:
+  caddy_data:
+  caddy_config:

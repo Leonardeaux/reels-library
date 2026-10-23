@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reels-library"
+version = "0.1.0"
+description = "Bibliothèque personnelle de références Instagram pour VPS et conteneurs"
+requires-python = ">=3.11"
+dependencies = ["waitress==3.0.2"]
+
+[project.optional-dependencies]
+sync = ["gallery-dl==1.32.17"]
+
+[project.scripts]
+reels-library = "reels_library.__main__:main"
+
+[tool.setuptools.package-data]
+reels_library = ["static/*"]

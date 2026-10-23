@@ -1,0 +1,7 @@
+*
+!requirements.txt
+!requirements-sync.txt
+!reels_library/
+!reels_library/**
+reels_library/**/__pycache__
+reels_library/**/*.pyc
