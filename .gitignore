@@ -1,0 +1,46 @@
+# Données personnelles, exports et médias locaux
+/data/
+/imports/
+/exports/
+/media/
+/vault/
+/sessions/
+/secrets/
+/models/
+saved_posts*.json
+saved_collections*.json
+cookies*.txt
+*.cookies
+*.mp4
+*.mov
+*.m4a
+*.mp3
+*.wav
+*.zip
+
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Environnements et dépendances
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+
+# Fichiers générés et temporaires
+/work/
+/outputs/
+dist/
+build/
+.pytest_cache/
+.ruff_cache/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+Desktop.ini
