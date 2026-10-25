@@ -36,6 +36,26 @@ class SessionTests(unittest.TestCase):
         content = session_fixture().replace(".instagram.com", "#HttpOnly_.instagram.com").replace("2147483647", "0")
         self.assertIn("#HttpOnly_.instagram.com", clean_cookies(content))
 
+    def test_millisecond_expiration_is_normalized_and_written_as_netscape_seconds(self):
+        content = session_fixture().replace("2147483647", "2147483647000")
+        with tempfile.TemporaryDirectory() as root:
+            store = SessionStore(Path(root) / "instagram.cookies")
+            store.install(content)
+            written = store.path.read_text(encoding="utf-8")
+            self.assertIn("\t2147483647\t", written)
+            self.assertNotIn("2147483647000", written)
+            self.assertEqual(clean_cookies(written), written)
+
+    def test_expired_millisecond_session_is_rejected_after_normalization(self):
+        content = session_fixture().replace("2147483647", "1700000000000")
+        with patch("reels_library.session.time.time", return_value=1800000000):
+            with self.assertRaises(ValidationError):
+                clean_cookies(content)
+
+    def test_unrepresentable_expiration_is_rejected(self):
+        with self.assertRaises(ValidationError):
+            clean_cookies(session_fixture().replace("2147483647", "999999999999999999"))
+
     def test_store_preserves_valid_session_on_invalid_replacement_and_never_returns_secrets(self):
         with tempfile.TemporaryDirectory() as root:
             store = SessionStore(Path(root) / "sessions" / "instagram.cookies")

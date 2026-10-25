@@ -31,10 +31,16 @@ def clean_cookies(content):
             expiration = int(expires)
         except ValueError as error:
             raise ValidationError(f"Expiration de session invalide à la ligne {position}.") from error
-        if expiration < 0 or not re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", name) or any(ord(char) < 32 or ord(char) == 127 for char in value):
+        # Certains exports fournissent des millisecondes Unix (13 chiffres).
+        # Netscape attend des secondes ; l'unité doit aussi être normalisée
+        # avant de décider si la session est déjà expirée.
+        if 1_000_000_000_000 <= expiration < 10_000_000_000_000:
+            expiration //= 1000
+        if expiration < 0 or expiration > 253_402_300_799 or not re.fullmatch(r"[!#$%&'*+.^_`|~0-9A-Za-z-]+", name) or any(ord(char) < 32 or ord(char) == 127 for char in value):
             raise ValidationError(f"Cookie invalide à la ligne {position}.")
         if expiration and expiration <= time.time():
             continue
+        fields[4] = str(expiration)
         if name == "sessionid" and value:
             authenticated = True
         result.append("\t".join(fields))

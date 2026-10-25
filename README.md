@@ -309,6 +309,8 @@ Si tu disposes déjà d'un fichier de cookies Instagram au format Netscape, tu p
 
 Le fichier est limité à 128 Ko. Le serveur filtre les cookies pour ne conserver que ceux d'Instagram et vérifie la présence d'un cookie de session non expiré. **« Session présente » ne prouve pas encore que le VPS peut lire les sauvegardes** : c'est le test de synchronisation qui le vérifiera.
 
+Le cookie `sessionid` permet au serveur de réutiliser une connexion Instagram déjà établie. La date du fichier est une expiration déclarée : Instagram peut invalider la session plus tôt. La version actuelle ne renouvelle pas automatiquement le fichier ; il faut le réexporter et le transférer si la connexion cesse d'être acceptée. Les dates Unix en millisecondes présentes dans certains exports sont converties en secondes lors de l'enregistrement, conformément au format Netscape.
+
 Ce fichier donne accès au compte. Conserve-le comme un secret et exclue-le de tes captures, messages de diagnostic et commits. Le dossier `sessions/` est déjà ignoré par Git ; la session stockée sur le serveur est aussi exclue de l'export des fiches.
 
 ## 7. Tester puis activer la synchronisation
@@ -401,7 +403,7 @@ Depuis le dépôt, sur une machine avec Python 3.11 ou supérieur :
 python -m unittest discover -v
 ```
 
-Sous Linux, remplace `python` par `python3`. La suite actuelle contient **53 tests**. Ils doivent se terminer par **OK**. Ils utilisent des bases temporaires et des réponses Instagram simulées, sans lire ta véritable session ni connecter ton compte.
+Sous Linux, remplace `python` par `python3`. La suite actuelle contient **56 tests**. Ils doivent se terminer par **OK**. Ils utilisent des bases temporaires et des réponses Instagram simulées, sans lire ta véritable session ni connecter ton compte.
 
 Pour tester aussi l'image Docker :
 
