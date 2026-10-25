@@ -53,6 +53,10 @@ python -m reels_library.export_session --browser firefox
 
 Les valeurs acceptées sont `firefox`, `edge` et `chrome`. La commande prépare `sessions/instagram.cookies`, contenant uniquement la session Instagram. L'accès aux cookies dépend du navigateur et de ses protections ; un échec est signalé sans afficher les valeurs de session.
 
+Sur Windows, les cookies Chrome protégés par App-Bound Encryption ne sont pas déchiffrables par le lecteur Windows du connecteur utilisé dans cette version. Le code `COOKIES_DECRYPTION_FAILED` signale un problème de déchiffrement. Pour préparer la session avec Firefox, connecte-toi à Instagram dans Firefox puis utilise `--browser firefox`. Le VPS reste autonome une fois le fichier transféré.
+
+Pour un profil précis, ajoute par exemple `--profile "Profile 1"` ou le chemin de son dossier. L'option cible le profil connecté et ne modifie pas les protections de chiffrement. Les codes `COOKIES_LOCKED` et `COOKIES_PROFILE_NOT_FOUND` distinguent un accès au fichier bloqué d'un profil introuvable. Le [tableau de diagnostic du README](../README.md#si-chrome-sous-windows-ne-permet-pas-la-lecture) décrit les actions correspondantes.
+
 Dans l'application hébergée en HTTPS, ouvrir **Synchronisation**, transférer ce fichier puis lancer **Tester et synchroniser** avec la limite de 50 publications. Le serveur vérifie le format et la présence d'une session non expirée ; seul un passage réel valide l'accès au compte depuis le VPS.
 
 Après un test réussi, activer les passages automatiques. Ils restent actifs tant que le conteneur fonctionne, même si tous les clients web sont fermés et l'ordinateur personnel éteint. Les réglages sont conservés ; au démarrage du service, la planification reprend. Un ancien passage interrompu est marqué comme tel.

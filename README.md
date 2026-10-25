@@ -242,7 +242,7 @@ Cette préparation se fait sur une machine où tu peux te connecter à Instagram
 
 ### Créer le fichier de session
 
-Connecte-toi d'abord à **https://www.instagram.com/** dans le navigateur choisi et vérifie que tu peux consulter tes sauvegardes. Le profil est sélectionné automatiquement par le connecteur ; l'outil ne propose pas encore de choix explicite de profil.
+Connecte-toi d'abord à **https://www.instagram.com/** dans le navigateur choisi et vérifie que tu peux consulter tes sauvegardes. Le profil est sélectionné automatiquement par le connecteur ; l'option `--profile` permet de choisir un profil précis si plusieurs existent.
 
 Sur **ton ordinateur Windows**, depuis le dépôt, prépare l'outil :
 
@@ -266,6 +266,37 @@ python3 -m venv .venv
 ```
 
 Le fichier produit est **`sessions/instagram.cookies`**. L'outil ne contacte pas Instagram pour établir une nouvelle connexion : il lit la session du navigateur déjà connecté. La lecture peut échouer selon le profil et les protections du navigateur ; le message d'erreur sera affiché sans les valeurs des cookies.
+
+#### Si Chrome sous Windows ne permet pas la lecture
+
+Depuis Chrome 127, Google a introduit le chiffrement **App-Bound Encryption**, qui lie le déchiffrement des cookies à Chrome. Le connecteur `gallery-dl` 1.32.17 utilisé ici ne gère pas ce chiffrement dans son lecteur de cookies Windows. C'est une cause possible d'échec de `--browser chrome`. [Explication officielle de Google](https://security.googleblog.com/2024/07/improving-security-of-chrome-cookies-on.html).
+
+L'outil distingue désormais les cas suivants :
+
+| Code d'erreur | Action proposée |
+| --- | --- |
+| `COOKIES_LOCKED` | Ferme complètement le navigateur puis relance avec ton compte Windows habituel |
+| `COOKIES_DECRYPTION_FAILED` | Prépare la session dans Firefox : connecte-toi à Instagram dans Firefox, puis lance la commande ci-dessous |
+| `COOKIES_PROFILE_NOT_FOUND` | Vérifie le navigateur installé et précise le profil avec `--profile` |
+| `INSTAGRAM_SESSION_MISSING` | Vérifie que le profil choisi est connecté au compte Instagram voulu |
+| `COOKIES_READ_FAILED` | La cause n'a pas pu être précisée ; conserve ce code et les étapes de reproduction pour le diagnostic |
+| `SESSION_WRITE_FAILED` | Vérifie les permissions du dossier de sortie ou choisis un autre chemin avec `--output` |
+
+Exemple Windows, après connexion à Instagram dans Firefox :
+
+```powershell
+.\.venv\Scripts\python.exe -m reels_library.export_session --browser firefox
+```
+
+Pour renouveler un fichier déjà présent, ajoute `--replace`. Cette préparation avec Firefox sert à créer le fichier utilisé par le VPS ; tu peux utiliser ton navigateur habituel pour consulter Reels Library.
+
+Pour choisir un profil Chrome précis :
+
+```powershell
+.\.venv\Scripts\python.exe -m reels_library.export_session --browser chrome --profile "Profile 1"
+```
+
+Remplace `Profile 1` par le nom ou le chemin du profil connecté. Le choix du profil permet de cibler la bonne session ; la possibilité de déchiffrer ses cookies dépend toujours des protections du navigateur.
 
 Si tu disposes déjà d'un fichier de cookies Instagram au format Netscape, tu peux l'utiliser directement pour le transfert suivant.
 
@@ -370,7 +401,7 @@ Depuis le dépôt, sur une machine avec Python 3.11 ou supérieur :
 python -m unittest discover -v
 ```
 
-Sous Linux, remplace `python` par `python3`. La suite actuelle contient **45 tests**. Ils doivent se terminer par **OK**. Ils utilisent des bases temporaires et des réponses Instagram simulées, sans lire ta véritable session ni connecter ton compte.
+Sous Linux, remplace `python` par `python3`. La suite actuelle contient **53 tests**. Ils doivent se terminer par **OK**. Ils utilisent des bases temporaires et des réponses Instagram simulées, sans lire ta véritable session ni connecter ton compte.
 
 Pour tester aussi l'image Docker :
 
@@ -395,7 +426,8 @@ Ce test vérifie l'accès privé, l'exécution sans root, la séparation de la s
 | Erreur **Hôte non autorisé** ou **origine non autorisée** | Vérifie que `REELS_PUBLIC_URL` correspond à l'adresse utilisée. Après modification de `.env`, relance `docker compose up -d` avec le profil approprié |
 | HTTPS ne fonctionne pas | Vérifie DNS, ports 80/443 et `docker compose --profile public logs --tail=100 proxy` ; consulte aussi le guide VPS |
 | L'application n'est pas accessible sur le téléphone par `localhost` | `localhost` désigne le téléphone lui-même. Utilise l'adresse HTTPS du VPS |
-| L'export de session échoue | Vérifie la connexion Instagram dans le navigateur choisi. Avec plusieurs profils, la sélection automatique peut nécessiter une vérification ; la lecture dépend aussi des protections du navigateur |
+| L'export de session échoue | Consulte le code d'erreur et le tableau de la section 6 ; utilise `--profile` pour cibler le bon profil |
+| Chrome renvoie `COOKIES_DECRYPTION_FAILED` sous Windows | La protection App-Bound peut empêcher le déchiffrement ; prépare la session en te connectant à Instagram dans Firefox puis avec `--browser firefox` |
 | L'outil dit que le fichier de session existe déjà | Ajoute `--replace` uniquement lorsque tu veux renouveler cette session |
 | Aucune session Instagram valide dans le fichier | Fournis un export Netscape contenant une session Instagram non expirée ; reconnecte-toi avant de le renouveler |
 | Session présente, mais synchronisation en échec | Consulte le dernier passage et vérifie le compte Instagram pour une demande de vérification ; renouvelle la session si nécessaire |
