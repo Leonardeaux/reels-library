@@ -10,6 +10,25 @@ permissions:
   contents: read
 
 jobs:
+  secrets:
+    name: Secrets dans l'historique Git
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Scanner avec Gitleaks, sans afficher les secrets
+        run: >-
+          docker run --rm --network none
+          -e GIT_CONFIG_COUNT=1
+          -e GIT_CONFIG_KEY_0=safe.directory
+          -e GIT_CONFIG_VALUE_0=/repo
+          --mount "type=bind,source=${{ github.workspace }},target=/repo,readonly"
+          ghcr.io/gitleaks/gitleaks@sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
+          git --no-banner --redact=100 --log-opts=--all /repo
+
   python:
     name: Python (${{ matrix.os }})
     runs-on: ${{ matrix.os }}

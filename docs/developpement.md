@@ -62,7 +62,7 @@ python scripts/smoke_container.py
 
 Sur Linux ou macOS, adapte la dernière commande à ton exécutable Python. Le script crée des ressources Docker aux noms aléatoires, vérifie authentification, exécution non root, permissions, persistance et création automatique de clé, puis nettoie uniquement ses ressources. Il utilise des cookies fictifs et n'envoie aucune requête à Instagram.
 
-Le workflow [Vérifications](../.github/workflows/ci.yml) lance les tests Python sur Windows et Linux, puis construit et vérifie le conteneur Linux. Il ne publie pas d'image ni de release. Une construction réussie ne valide pas l'accès à un compte Instagram réel.
+Le workflow [Vérifications](../.github/workflows/ci.yml) vérifie les secrets dans l'historique Git avec Gitleaks, lance les tests Python sur Windows et Linux, puis construit et vérifie le conteneur Linux. Il ne publie pas d'image ni de release. Une construction réussie ne valide pas l'accès à un compte Instagram réel.
 
 Pour le contrôle fonctionnel dans le navigateur, suis le [test manuel](test-manuel.md). Les sources de l'interface sont directement dans `reels_library/static/`, sans compilation JavaScript.
 
