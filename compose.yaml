@@ -1,18 +1,20 @@
+name: reels-library
+
 services:
   app:
     build: .
     init: true
     restart: unless-stopped
     environment:
-      REELS_PUBLIC_URL: ${REELS_PUBLIC_URL:-http://localhost:8765}
-      REELS_ACCESS_TOKEN_FILE: /run/secrets/app_token
-    secrets:
-      - app_token
+      REELS_PUBLIC_URL: ${REELS_PUBLIC_URL:-http://localhost:${REELS_PORT:-8765}}
+      REELS_ACCESS_TOKEN_FILE: /app/config/app_token
+      REELS_CREATE_ACCESS_TOKEN: "true"
     volumes:
       - library_data:/app/data
       - instagram_session:/app/sessions
+      - app_config:/app/config
     ports:
-      - "127.0.0.1:8765:8080"
+      - "127.0.0.1:${REELS_PORT:-8765}:8080"
     read_only: true
     tmpfs:
       - /tmp:size=64m,mode=1777
@@ -39,12 +41,9 @@ services:
       app:
         condition: service_healthy
 
-secrets:
-  app_token:
-    file: ./secrets/app_token
-
 volumes:
   library_data:
   instagram_session:
+  app_config:
   caddy_data:
   caddy_config:

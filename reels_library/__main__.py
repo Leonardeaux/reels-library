@@ -5,6 +5,7 @@ import os
 import signal
 from pathlib import Path
 
+from .access_key import configured_key
 from .domain import ValidationError
 from .web import Application
 
@@ -21,17 +22,16 @@ def main():
         from waitress import serve
     except ImportError:
         parser.exit(1, "Installe les dépendances : python -m pip install -r requirements.txt -r requirements-sync.txt\n")
-    token_file = os.environ.get("REELS_ACCESS_TOKEN_FILE")
     try:
-        token = Path(token_file).read_text(encoding="utf-8").strip() if token_file else os.environ.get("REELS_ACCESS_TOKEN")
+        token = configured_key(os.environ)
         if args.host not in {"127.0.0.1", "localhost", "::1"} and not token:
             raise ValidationError("Une clé d'accès est obligatoire pour écouter en dehors de la boucle locale.")
         public_url = os.environ.get("REELS_PUBLIC_URL", f"http://127.0.0.1:{args.port}")
         app = Application(args.database, public_url, token, os.environ.get("REELS_SESSION_FILE", "sessions/instagram.cookies"))
-    except (OSError, ValidationError) as error:
+    except (OSError, UnicodeError, ValidationError) as error:
         parser.exit(1, f"Configuration impossible : {error}\n")
     print(f"Reels Library : {app.public_url}", flush=True)
-    print("Synchronisation exécutée par le serveur ; aucune fenêtre de navigateur nécessaire.", flush=True)
+    print("Synchronisation active tant que l'application fonctionne ; l'interface peut être fermée.", flush=True)
 
     def stop(signum, frame):
         raise KeyboardInterrupt()

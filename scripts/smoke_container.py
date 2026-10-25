@@ -28,6 +28,7 @@ def main():
     args = parser.parse_args()
     prefix = "reels-library-qa-" + uuid.uuid4().hex[:10]
     container, data_volume, session_volume = prefix, prefix + "-data", prefix + "-session"
+    config_volume = prefix + "-config"
     root = Path(__file__).resolve().parent.parent
     work = root / "work"
     work.mkdir(exist_ok=True)
@@ -41,14 +42,17 @@ def main():
         token_file.write_text(token, encoding="ascii")
         token_file.chmod(0o644)
 
-        def start():
+        def start(automatic=False):
+            authentication = ["-e", "REELS_ACCESS_TOKEN_FILE=/app/config/app_token", "-e", "REELS_CREATE_ACCESS_TOKEN=true",
+                              "--mount", f"type=volume,source={config_volume},target=/app/config"] if automatic else [
+                "--mount", f"type=bind,source={token_file},target=/run/secrets/app_token,readonly",
+                "-e", "REELS_ACCESS_TOKEN_FILE=/run/secrets/app_token"]
             docker("run", "-d", "--name", container, "--read-only", "--cap-drop", "ALL",
                    "--security-opt", "no-new-privileges", "--tmpfs", "/tmp:size=64m,mode=1777",
-                   "--mount", f"type=bind,source={token_file},target=/run/secrets/app_token,readonly",
                    "--mount", f"type=volume,source={data_volume},target=/app/data",
                    "--mount", f"type=volume,source={session_volume},target=/app/sessions",
                    "-p", "127.0.0.1::8080", "-e", "REELS_PUBLIC_URL=https://" + host,
-                   "-e", "REELS_ACCESS_TOKEN_FILE=/run/secrets/app_token", args.image)
+                   *authentication, args.image)
             address = docker("port", container, "8080/tcp").stdout.strip()
             port = int(address.rsplit(":", 1)[1])
             deadline = time.monotonic() + 20
@@ -79,6 +83,7 @@ def main():
         try:
             docker("volume", "create", data_volume)
             docker("volume", "create", session_volume)
+            docker("volume", "create", config_volume)
             port = start()
             assert request(port, "GET", "/api/library", authenticated=False)[0] == 401
             assert request(port, "GET", "/api/library")[0] == 200
@@ -106,6 +111,24 @@ def main():
             assert not sync["settings"]["enabled"]
             print("OK : bibliothèque, réglages et session conservés après recréation du conteneur.")
 
+            docker("stop", "--time", "10", container)
+            docker("rm", container)
+            port = start(automatic=True)
+            # Lire en mémoire uniquement ; ne jamais afficher cette valeur.
+            token = docker("exec", container, "python", "-m", "reels_library.access_key").stdout.strip()
+            assert len(token) >= 32
+            assert request(port, "GET", "/api/library", authenticated=False)[0] == 401
+            assert request(port, "GET", "/api/reels/" + identifier)[0] == 200
+            assert request(port, "GET", "/api/sync")[1]["session"]["configured"]
+            assert docker("exec", container, "stat", "-c", "%a", "/app/config/app_token").stdout.strip() == "600"
+            assert token not in docker("logs", container).stdout
+            docker("stop", "--time", "10", container)
+            docker("rm", container)
+            port = start(automatic=True)
+            assert docker("exec", container, "python", "-m", "reels_library.access_key").stdout.strip() == token
+            assert request(port, "GET", "/api/reels/" + identifier)[1]["notes"] == "Conservée après recréation"
+            print("OK : clé créée automatiquement sans Python sur l'hôte, privée et conservée ; données existantes reprises.")
+
             result = docker("run", "--rm", "-e", "REELS_PUBLIC_URL=https://" + host, args.image, check=False)
             assert result.returncode != 0 and "clé d'accès" in result.stderr
             print("OK : démarrage distant refusé sans clé d'accès.")
@@ -113,7 +136,7 @@ def main():
         finally:
             docker("stop", "--time", "10", container, check=False)
             docker("rm", "--force", container, check=False)
-            docker("volume", "rm", data_volume, session_volume, check=False)
+            docker("volume", "rm", data_volume, session_volume, config_volume, check=False)
 
 
 if __name__ == "__main__":

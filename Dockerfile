@@ -12,10 +12,11 @@ COPY requirements.txt requirements-sync.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -r requirements-sync.txt \
     && groupadd --gid 10001 reels \
     && useradd --uid 10001 --gid reels --no-create-home reels \
-    && mkdir -p /app/data /app/sessions \
+    && mkdir -p /app/data /app/sessions /app/config \
     && chown -R reels:reels /app \
-    && chmod 700 /app/sessions
+    && chmod 700 /app/sessions /app/config
 COPY --chown=reels:reels reels_library ./reels_library
+COPY --chown=reels:reels LICENSE THIRD_PARTY_NOTICES.md ./
 
 USER 10001:10001
 EXPOSE 8080

@@ -1,6 +1,8 @@
 *
 !requirements.txt
 !requirements-sync.txt
+!LICENSE
+!THIRD_PARTY_NOTICES.md
 !reels_library/
 !reels_library/**
 reels_library/**/__pycache__

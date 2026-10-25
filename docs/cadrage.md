@@ -1,6 +1,6 @@
 # Cadrage initial — Bibliothèque active de Reels
 
-Version 0.2 — 23 octobre 2026. Titre de travail.
+Version 0.3 — 25 octobre 2026. Titre de travail.
 
 Ce document prépare les décisions. Les propositions restent à discuter ; la récupération Instagram n'a pas encore été testée sur un compte réel.
 
@@ -12,12 +12,13 @@ Le produit couvre quatre besoins : récupérer, comprendre, retrouver et utilise
 
 | Élément | État |
 | --- | --- |
-| Usage personnel, ouverture possible ensuite | Confirmé par l'utilisateur |
+| Distribution open source sur GitHub, licence MIT pour le code du projet | Confirmé par l'utilisateur |
+| Application web personnelle dans un conteneur, installable chez soi ; VPS facultatif | Confirmé par l'utilisateur |
 | Reels sauvegardés comme source initiale | Demandé |
 | Catégories évolutives | Demandé |
 | Cuisine, informatique/IA/data/robotique, making/DIY/impression 3D | Exemples initiaux, liste ouverte |
 | Bibliothèque commune et modules spécialisés | Proposition |
-| Premier module, supports, budget et calendrier | À préciser |
+| Premier module spécialisé, budget et calendrier | À préciser |
 | Synchronisation automatique des sauvegardes | Faisabilité non établie |
 | Parcours sans Hermes ni iMessage | Préférence exprimée par l'utilisateur |
 

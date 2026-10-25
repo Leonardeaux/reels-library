@@ -1,27 +1,27 @@
 # Prochaines étapes
 
-## Réalisé dans la première base
+## Base disponible
 
-Bibliothèque, ajout par lien, imports avec bilan, recherche et filtres, thèmes, collections, notes, suivi, export et suppression. Connecteur de synchronisation en arrière-plan, stockage de session côté serveur, conteneur Docker et accès distant privé préparés.
+Application personnelle auto-hébergée, installation Docker sans Python sur l'hôte, clé créée au démarrage, stockage persistant séparé, bibliothèque, recherche, classement, import/export et connecteur expérimental. Code du projet sous MIT, documentation utilisateur et contribution, vérifications Python et Docker sur GitHub.
 
-## 1. Valider l'accès depuis le VPS
+## 1. Valider un parcours utilisateur complet
 
-Déployer la base, établir une session Instagram et tester 30 à 50 sauvegardes. Mesurer les références accessibles, légendes, dates effectivement disponibles, erreurs, contenus privés ou supprimés et temps de traitement. Confirmer que l'accès continue lorsque l'ordinateur personnel est éteint.
+Depuis une archive GitHub neuve, lancer Docker sur un ordinateur sans environnement de développement, retrouver la clé, importer la démonstration et vérifier les mises à jour sans perte de données. Essayer Windows, macOS et Linux. Vérifier visuellement le parcours dans les navigateurs réels.
 
-Cette étape est bloquante pour valider la synchronisation réelle, mais pas pour utiliser et tester la bibliothèque avec des liens ou fichiers.
+## 2. Valider puis fiabiliser Instagram
 
-## 2. Fiabiliser la synchronisation
+Tester 30 à 50 sauvegardes sur un compte réel : légendes, dates, contenus privés ou supprimés, temps de traitement, expiration et vérifications demandées par Instagram. Aucun compte réel n'a été utilisé pour les tests automatisés.
 
-Tester expiration de session, interruptions et limitations côté Instagram. Ajouter pagination et point de reprise persistants pour l'historique complet. La version actuelle relit une fenêtre de 50, 200, 1 000 ou 5 000 publications, signale la limite et déduplique les résultats. Elle ne supprime pas une référence retirée des sauvegardes Instagram.
+Ajouter ensuite pagination et point de reprise pour l'historique. La version actuelle relit une fenêtre limitée et déduplique. Le renouvellement de session reste manuel, et les retraits Instagram ne suppriment pas les fiches locales.
 
-## 3. Essayer les parcours sur ordinateur et téléphone
+## 3. Faciliter la connexion
 
-Vérifier visuellement recherche, import, modification et synchronisation sur les appareils réels. Aucun navigateur pilotable n'était disponible pour la vérification visuelle pendant ce développement.
+Améliorer la préparation d'une session sans environnement Python, les indications de renouvellement et le diagnostic des navigateurs. Conserver une action volontaire de l'utilisateur et ne pas distribuer de cookie dans le code ou les exemples.
 
-## 4. Ajouter l'analyse lorsque les sources sont accessibles
+## 4. Étudier une distribution préconstruite
 
-Conserver légendes, transcriptions et éventuelles images avec leur provenance. Mesurer qualité et coût avant activation de traitements massifs. Ne pas déduire de contenu à partir d'un lien seul.
+Une image prête à télécharger pourrait réduire le temps du premier lancement. Il faut alors prévoir versions, mises à jour, architectures supportées et notices des dépendances. Une application native ou un installateur n'est pas requis pour le parcours conteneur retenu.
 
-## 5. Choisir le premier module spécialisé
+## 5. Ajouter l'analyse et les modules spécialisés
 
-Recettes, veille ou projets DIY, selon les retours sur la bibliothèque. Définir les informations indispensables et les champs qui doivent rester inconnus quand la source est incomplète.
+Quand les sources sont accessibles, mesurer la qualité et le coût des transcriptions et analyses. Conserver leur provenance et les informations manquantes. Choisir ensuite le premier module : recettes, veille ou projets DIY.

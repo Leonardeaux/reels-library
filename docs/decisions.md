@@ -1,42 +1,42 @@
-# Décisions et questions ouvertes
+# Décisions
 
-Mise à jour : 23 octobre 2026.
+Mise à jour : 25 octobre 2026.
 
 ## Confirmé par l'utilisateur
 
 | Sujet | Décision |
 | --- | --- |
-| Public initial | Usage personnel ; ouverture possible ensuite |
-| Premier usage | Bibliothèque : importer, classer et retrouver |
-| Appareils | Ordinateur et téléphone |
-| Synchronisation | Automatique, indispensable au produit |
-| Hébergement | VPS ou conteneur ; l'ordinateur personnel ne doit pas être nécessaire au fonctionnement |
+| Distribution | Projet open source disponible sur GitHub, installable par chacun |
+| Licence du code du projet | MIT |
+| Exécution | Serveur web dans un conteneur, interface dans un navigateur |
+| Hébergement | Au choix de l'utilisateur ; aucun VPS imposé |
+| Usage initial | Bibliothèque : importer, classer et retrouver |
 | Source | Reels Instagram sauvegardés |
-| Organisation | Catégories évolutives, domaines ouverts |
+| Synchronisation | Automatique, indispensable au produit |
+| Organisation | Catégories évolutives et domaines ouverts |
 | Parcours | Sans Hermes ni iMessage |
-| Compte Instagram | Aucune connexion dans un navigateur au moment des échanges |
 
-## Choix de ce premier incrément
+La demande initiale d'un service fonctionnant obligatoirement sur VPS est remplacée par cette distribution à installer chez soi. Le terme desktop décrit ici l'usage depuis son ordinateur ; une fenêtre native et des installateurs par système ne font pas partie du choix retenu. L'accès depuis un téléphone reste possible avec une installation distante configurée volontairement.
 
-- Application web responsive, serveur Python WSGI/Waitress, base SQLite relationnelle.
-- Déploiement Docker Compose, un seul processus applicatif et un planificateur interne.
-- Volumes séparés pour bibliothèque et session Instagram ; clé d'accès injectée par secret Compose.
-- Accès distant personnel par authentification HTTP Basic (`admin` et clé longue) derrière HTTPS.
-- Synchronisation expérimentale via `gallery-dl`, à partir d'un fichier de session conservé côté serveur. Le service ne lit pas le navigateur du poste personnel pendant ses passages.
-- Connexion initiale et renouvellement de session manuels. L'outil d'export de navigateur est facultatif et sert uniquement à préparer la connexion.
-- Bibliothèque commune et classement manuel avant les modules spécialisés et l'analyse IA.
-- Réimport sans écrasement des corrections personnelles ; nouvelles sources conservées séparément.
+## Choix techniques
 
-Ces choix constituent une base de prototype. La validation de l'accès à Instagram depuis le VPS précède la promesse d'une synchronisation fiable.
+- Un même cœur Python WSGI/Waitress, SQLite et frontal HTML/CSS/JavaScript.
+- Docker Compose comme parcours utilisateur principal, sans Python obligatoire sur l'hôte.
+- Création automatique d'une clé privée par installation, persistée dans un volume distinct.
+- Volumes séparés pour bibliothèque, session Instagram et configuration ; code de l'image en lecture seule.
+- Accès local par défaut sur la boucle locale, authentification conservée.
+- HTTPS et reverse proxy facultatifs pour une installation distante.
+- gallery-dl lancé séparément pour lire les sauvegardes avec une session fournie par l'utilisateur.
+- Connexion initiale et renouvellement de la session manuels ; l'export de navigateur est facultatif.
+- MIT pour le code du projet ; licences propres aux dépendances, dont GPL-2.0-only pour gallery-dl.
+- Aucune bibliothèque, session, télémétrie ou inscription centralisée chez l'auteur du projet.
 
-## Questions encore ouvertes
+## À valider
 
-- Volume historique et nombre de nouvelles sauvegardes par semaine.
-- VPS, domaine et reverse proxy déjà disponibles ou à choisir.
-- Acceptabilité du renouvellement manuel d'une session expirée.
-- Budget et mode de traitement pour la future analyse.
-- Premier module spécialisé et outils existants à intégrer.
+- Accès Instagram sur un compte réel et stabilité dans la durée.
+- Volume historique et couverture des légendes, contenus privés ou supprimés.
+- Parcours Docker sur Windows, macOS et Linux avec utilisateurs réels.
+- Pagination et reprise persistante de l'historique.
+- Premier module spécialisé et éventuelle analyse du contenu.
 
-## Validation restante
-
-L'extracteur est installé, les contrats de données et la gestion des erreurs sont testés avec des réponses simulées. Aucun compte réel n'a été utilisé. La connexion initiale, les challenges éventuels, la stabilité de l'accès depuis un VPS et la couverture des contenus privés/supprimés restent à mesurer.
+Le dépôt et sa visibilité GitHub sont des sujets distincts de la licence. Rendre le dépôt public est nécessaire pour distribuer librement son code à tous ; l'ajout de MIT ne modifie pas automatiquement cette visibilité.

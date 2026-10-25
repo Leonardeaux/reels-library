@@ -162,7 +162,7 @@ async function loadSync(populate = false) {
     const last = data.runs[0];
     const heading = data.running ? "Synchronisation en cours…" : last?.status === "success" ? "Dernier passage réussi" : last ? "Une connexion à vérifier" : "Prêt pour le premier test";
     const description = data.running ? "Lecture des sauvegardes dans Instagram. Vos fiches actuelles restent disponibles." : last?.message || "Fournissez une session Instagram, puis lancez un premier passage.";
-    $("#session-state").textContent = data.session.configured ? `Session présente sur le serveur · transférée le ${formatDate(data.session.updated_at, true)}. Son accès effectif reste à vérifier par un passage.` : "Aucune session valide sur le serveur. Fichier Netscape, 128 Ko maximum.";
+    $("#session-state").textContent = data.session.configured ? `Session présente dans cette installation · importée le ${formatDate(data.session.updated_at, true)}. Son accès effectif reste à vérifier par un passage.` : "Aucune session valide dans cette installation. Fichier Netscape, 128 Ko maximum.";
     $("#remove-session").hidden = !data.session.configured;
     $("button[type=submit]", $("#session-form")).disabled = data.running;
     $("#remove-session").disabled = data.running;
@@ -410,11 +410,11 @@ $("#session-form").addEventListener("submit", async (event) => {
     });
     form.reset();
     await loadSync();
-    toast("La session est enregistrée sur le serveur. Vous pouvez tester la synchronisation.");
+    toast("La session est enregistrée dans cette installation. Vous pouvez tester la synchronisation.");
   } catch (error) { errorAt("#session-error", error); }
 });
 $("#remove-session").addEventListener("click", async (event) => {
-  if (!confirm("Retirer la session Instagram du serveur et désactiver les passages automatiques ? Vos références resteront dans la bibliothèque.")) return;
+  if (!confirm("Retirer la session Instagram de cette installation et désactiver les passages automatiques ? Vos références resteront dans la bibliothèque.")) return;
   try {
     await busy(event.currentTarget, () => api("/api/sync/session", { method: "DELETE" }));
     await loadSync(true);
